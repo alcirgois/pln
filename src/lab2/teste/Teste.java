@@ -8,8 +8,8 @@ import lab2.base.Corpus;
  */
 public class Teste {
 	public static void main(String[] args) {
-		Corpus corpus = new Corpus("/lab2/teste.txt");
-		for (String linha : corpus.getTexto()) {
+		Corpus corpus = new Corpus("res/lab2/teste.txt");
+		for (String linha : corpus.getConjDeTeste()) {
 			System.out.println(linha);
 		}
 	}
