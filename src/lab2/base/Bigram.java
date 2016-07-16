@@ -1,28 +1,41 @@
 package lab2.base;
 
+import lab2.util.tokens.Token;
+
 /**
  * @author Emanuel
  *
  */
 public class Bigram extends Unigram {
 
-	private String palavraSeguinte;
+	private String proxPalavra;
 
-	public Bigram(String palavra, String palavraSeguinte) {
-		super(palavra);
-		this.palavraSeguinte = palavraSeguinte;
+	public Bigram(Token token, String proxPalavra) {
+		super(token);
+		this.proxPalavra = proxPalavra;
 	}
 
-	public Bigram(String palavra, long qtd, String palavraSeguinte) {
-		super(palavra, qtd);
-		this.palavraSeguinte = palavraSeguinte;
+	public String getProxPalavra() {
+		return proxPalavra;
 	}
 
-	public String getPalavraCond() {
-		return palavraSeguinte;
+	public void addQtd() {
+		token.setCounter(token.getCounter() + 1);
 	}
 
-	public void setP(long qtdSeq) {
-		this.p = qtdSeq / token.getCounter();
+	/*
+	 * palavraSeguinte = palavra[i] 
+	 * P(palavra[i]|palavra[i-1]) = qtd(palavra[i-1],palavra[i])/qtd(palavra[i-1]) 
+	 * Bigram.getQtd() == qtd(palavra[i-1],palavra[i]) 
+	 * Unigram.getQtd() == qtd(palavra[i-1])
+	 */
+	public void setP(long qtd) {
+		this.p = token.getCounter() / qtd;
+	}
+
+	public boolean equals(Object obj, Object obj2) {
+		if (!super.equals(obj)) return false;
+		if (proxPalavra.equals(obj2)) return true;
+		return false;
 	}
 }

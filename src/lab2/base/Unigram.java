@@ -10,16 +10,16 @@ public class Unigram {
 	protected Token token;
 	protected float p;
 
-	public Unigram(String palavra) {
-		this.token = new Token(palavra);
-	}
-
-	public Unigram(String palavra, long qtd) {
-		this.token = new Token(palavra, qtd);
+	public Unigram(Token token) {
+		this.token = token;
 	}
 
 	public String getPalavra() {
 		return token.getText();
+	}
+
+	public long getQtd() {
+		return token.getCounter();
 	}
 
 	public void addQtd(long qtd) {
@@ -30,8 +30,15 @@ public class Unigram {
 		return p;
 	}
 
+	// P(palavra[i]) = qtd(palavra[i]) / qtd(palavras)
 	public void setP(long qtdTotal) {
 		this.p = token.getCounter() / qtdTotal;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (getPalavra().equals(obj)) return true;
+		else return false;
 	}
 
 }
