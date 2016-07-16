@@ -7,8 +7,8 @@ import lab2.util.tokens.Token;
  *
  */
 public class Unigram {
-	private Token token;
-	private float p;
+	protected Token token;
+	protected float p;
 
 	public Unigram(String palavra) {
 		this.token = new Token(palavra);
