@@ -18,24 +18,24 @@ public class Teste {
 		corpus = new Corpus(arquivo);
 		gestorDeNgrams = new GestorDeNgrams(corpus);
 	}
-		
+
 	public void imprimirUnigrams() {
 		System.out.println("Unigrams");
-		for(Unigram unigram : gestorDeNgrams.getUnigrams()) {
+		for (Unigram unigram : gestorDeNgrams.getUnigrams()) {
 			System.out.println(unigram);
 		}
 	}
-	
+
 	public void imprimirBigrams() {
 		System.out.println("Bigrams");
-		for(Bigram bigram : gestorDeNgrams.getBigrams()) {
+		for (Bigram bigram : gestorDeNgrams.getBigrams()) {
 			System.out.println(bigram);
 		}
 	}
 
 	public static void main(String[] args) {
-		Teste teste = new Teste("res/lab2/teste.txt");
-		teste.imprimirUnigrams();
-		teste.imprimirBigrams();
+		 Teste teste = new Teste("res/lab2/teste.txt");
+		 teste.imprimirUnigrams();
+		 teste.imprimirBigrams();
 	}
 }

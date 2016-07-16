@@ -7,23 +7,25 @@ import lab2.util.tokens.Token;
  *
  */
 public class Unigram {
-	private Token token;
+	private String palavra;
+	private long qtd;
 	private float p;
 
 	public Unigram(Token token) {
-		this.token = token;
+		palavra = token.getPalvra();
+		qtd = token.getQtd();
 	}
 
 	public String getPalavra() {
-		return token.getText();
+		return palavra;
 	}
 
 	public long getQtd() {
-		return token.getCounter();
+		return qtd;
 	}
 
 	public void addQtd(long qtd) {
-		token.setCounter(token.getCounter() + qtd);
+		this.qtd += qtd;
 	}
 
 	public float getP() {
@@ -32,7 +34,7 @@ public class Unigram {
 
 	// P(palavra[i]) = qtd(palavra[i]) / qtd(palavras)
 	public void setP(long qtdTotal) {
-		this.p = token.getCounter() / qtdTotal;
+		this.p = qtd / qtdTotal;
 	}
 
 	@Override
@@ -43,6 +45,6 @@ public class Unigram {
 
 	@Override
 	public String toString() {
-		return token.getText() + " : [qtd = " + token.getCounter() + ", p = " + p + "]";
+		return palavra + " : [qtd = " + qtd + ", p = " + p + "]";
 	}
 }

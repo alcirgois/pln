@@ -7,7 +7,7 @@ import lab2.base.Corpus;
 import lab2.base.ngram.Bigram;
 import lab2.base.ngram.Unigram;
 import lab2.util.tokens.Token;
-import lab2.util.tokens.Tokenizer;
+import lab2.util.tokens.Tokenizador;
 
 /**
  * @author Emanuel
@@ -35,21 +35,21 @@ public class GestorDeNgrams {
 
 	public void gerarNgrams() {
 		List<Token> tokens = new ArrayList<Token>();
-		Tokenizer tokenizador = new Tokenizer();
+		Tokenizador tokenizador = new Tokenizador();
 		int posAtual = 0;
 		long qtdTotal = 0;
 		for (String linha : corpus.getConjDeTreinamento()) {
-			tokens = tokenizador.textToTokens(linha);
+			tokens = tokenizador.gerarTokens(linha);
 			for (Token token : tokens) {
-				qtdTotal += token.getCounter();
+				qtdTotal += token.getQtd();
 				posAtual = tokens.indexOf(token);
-				if (posAtual == 0) gerarBigrams("<ini>", token.getText());
+				if (posAtual == 0) gerarBigrams("<ini>", token.getPalvra());
 				for (Unigram unigram : unigrams) {
-					if (unigram.equals(token.getText())) unigram.addQtd(token.getCounter());
+					if (unigram.equals(token.getPalvra())) unigram.addQtd(token.getQtd());
 					else unigrams.add(new Unigram(token));
 				}
-				if (posAtual < tokens.size()) gerarBigrams(token.getText(), tokens.get(posAtual + 1).getText());
-				else gerarBigrams(token.getText(), "<fim>");
+				if (posAtual < tokens.size()-1) gerarBigrams(token.getPalvra(), tokens.get(posAtual + 1).getPalvra());
+				else gerarBigrams(token.getPalvra(), "<fim>");
 			}
 		}
 		calcularP(qtdTotal);

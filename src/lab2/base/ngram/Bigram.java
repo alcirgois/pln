@@ -1,7 +1,5 @@
 package lab2.base.ngram;
 
-import lab2.util.tokens.Token;
-
 /**
  * @author Emanuel
  *
