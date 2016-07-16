@@ -1,4 +1,4 @@
-package lab2.base;
+package lab2.base.ngram;
 
 import lab2.util.tokens.Token;
 
@@ -7,8 +7,8 @@ import lab2.util.tokens.Token;
  *
  */
 public class Unigram {
-	protected Token token;
-	protected float p;
+	private Token token;
+	private float p;
 
 	public Unigram(Token token) {
 		this.token = token;
@@ -41,4 +41,8 @@ public class Unigram {
 		else return false;
 	}
 
+	@Override
+	public String toString() {
+		return token.getText() + " : [qtd = " + token.getCounter() + ", p = " + p + "]";
+	}
 }
