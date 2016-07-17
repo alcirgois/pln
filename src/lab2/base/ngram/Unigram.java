@@ -6,7 +6,7 @@ import lab2.util.tokens.Token;
  * @author Emanuel
  *
  */
-public class Unigram {
+public class Unigram implements Comparable<Unigram> {
 	private String palavra;
 	private long qtd;
 	private double p;
@@ -46,5 +46,10 @@ public class Unigram {
 	@Override
 	public String toString() {
 		return palavra + " : [qtd = " + qtd + ", p = " + p + "]";
+	}
+	
+	@Override
+	public int compareTo(Unigram unigram) {
+		return this.getPalavra().compareTo(unigram.getPalavra());
 	}
 }

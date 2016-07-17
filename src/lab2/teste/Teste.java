@@ -1,5 +1,7 @@
 package lab2.teste;
 
+import java.util.Collections;
+
 import lab2.GestorDeNgrams;
 import lab2.base.Corpus;
 import lab2.base.ngram.Bigram;
@@ -20,21 +22,23 @@ public class Teste {
 	}
 
 	public void imprimirUnigrams() {
-		System.out.println("==========Unigrams==========");
+		System.out.println("====================Unigrams====================");
+		Collections.sort(gestorDeNgrams.getUnigrams());
 		for (Unigram unigram : gestorDeNgrams.getUnigrams()) {
 			System.out.println(unigram);
 		}
 	}
 
 	public void imprimirBigrams() {
-		System.out.println("\n==========Bigrams==========");
+		System.out.println("\n====================Bigrams====================");
+		Collections.sort(gestorDeNgrams.getBigrams());
 		for (Bigram bigram : gestorDeNgrams.getBigrams()) {
 			System.out.println(bigram);
 		}
 	}
 
 	public static void main(String[] args) {
-		 Teste teste = new Teste("res/lab2/teste.txt");
+		 Teste teste = new Teste("res/lab2/Lorem ipsum.txt");
 		 teste.imprimirUnigrams();
 		 teste.imprimirBigrams();
 	}

@@ -41,16 +41,21 @@ public class GestorDeNgrams {
 		for (String linha : corpus.getConjDeTreinamento()) {
 			tokens = tokenizador.gerarTokens(linha);
 			int tam;
+			boolean achou;
 			for (Token token : tokens) {
 				qtdTotal += token.getQtd();
 				posAtual = tokens.indexOf(token);
 				if (posAtual == 0) gerarBigrams("<ini>", token.getPalvra());
 				if (!unigrams.isEmpty()) {
 					tam = unigrams.size();
+					achou = false;
 					for (int i = 0; i < tam; i++) {
-						if (unigrams.get(i).equals(token.getPalvra())) unigrams.get(i).addQtd(token.getQtd());
+						if (unigrams.get(i).equals(token.getPalvra())) {
+							unigrams.get(i).addQtd(token.getQtd());
+							achou = true;
+						}
 					}
-					unigrams.add(new Unigram(token));
+					if (!achou) unigrams.add(new Unigram(token));
 				} else unigrams.add(new Unigram(token));
 				if (posAtual < tokens.size() - 1) gerarBigrams(token.getPalvra(), tokens.get(posAtual + 1).getPalvra());
 				else gerarBigrams(token.getPalvra(), "<fim>");
@@ -61,12 +66,17 @@ public class GestorDeNgrams {
 
 	private void gerarBigrams(String palavra, String proxPalavra) {
 		int tam;
+		boolean achou;
 		if (!bigrams.isEmpty()) {
 			tam = bigrams.size();
+			achou = false;
 			for (int i = 0; i < tam; i++) {
-				if (bigrams.get(i).equals(palavra, proxPalavra)) bigrams.get(i).incQtd();
+				if (bigrams.get(i).equals(palavra, proxPalavra)) {
+					bigrams.get(i).incQtd();
+					achou = true;
+				}
 			}
-			bigrams.add(new Bigram(palavra, proxPalavra));
+			if (!achou) bigrams.add(new Bigram(palavra, proxPalavra));
 		} else bigrams.add(new Bigram(palavra, proxPalavra));
 	}
 

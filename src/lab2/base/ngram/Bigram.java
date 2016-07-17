@@ -4,7 +4,7 @@ package lab2.base.ngram;
  * @author Emanuel
  *
  */
-public class Bigram {
+public class Bigram implements Comparable<Bigram> {
 
 	private String palavra, proxPalavra;
 	private long qtd;
@@ -31,7 +31,7 @@ public class Bigram {
 	public void incQtd() {
 		qtd++;
 	}
-	
+
 	public double getP() {
 		return p;
 	}
@@ -48,5 +48,11 @@ public class Bigram {
 	@Override
 	public String toString() {
 		return "(" + proxPalavra + " | " + palavra + ") : [qtd = " + qtd + ", p = " + p + "]";
+	}
+
+	@Override
+	public int compareTo(Bigram bigram) {
+		if (!this.getPalavra().equals(bigram.getPalavra())) return this.getPalavra().compareTo(bigram.getPalavra());
+		else return this.getProxPalavra().compareTo(bigram.getProxPalavra());
 	}
 }
