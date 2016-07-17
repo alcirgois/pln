@@ -22,7 +22,7 @@ public class Perplexidade {
 
 		for (String linha: conjDeTeste) {
 			String palavraAnterior = "<ini>";
-			String[] palavras = linha.split("[ \\.]");
+			String[] palavras = linha.toLowerCase().split("[ \\.]");
 			n += palavras.length;
 			for (String palavra: palavras) {
 				BigramMimico mimico = new BigramMimico(palavraAnterior, palavra);
