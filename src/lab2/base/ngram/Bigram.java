@@ -62,4 +62,8 @@ public class Bigram implements ImplBigram, Comparable<Bigram> {
 		if (!this.getPalavra().equals(bigram.getPalavra())) return this.getPalavra().compareTo(bigram.getPalavra());
 		else return this.getProxPalavra().compareTo(bigram.getProxPalavra());
 	}
+
+	public void setQtd(long qtd) {
+		this.qtd = qtd;
+	}
 }
