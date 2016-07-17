@@ -23,7 +23,14 @@ public class Token {
         qtd++;
     }
 
-    public String getPalvra() {
-        return palavra;
+    public String getPalvra() {     
+    	return palavra;
     }
+
+	@Override
+	public String toString() {
+		return palavra + " : " + qtd;
+	}
+    
+    
 }

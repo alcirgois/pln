@@ -20,14 +20,14 @@ public class Teste {
 	}
 
 	public void imprimirUnigrams() {
-		System.out.println("Unigrams");
+		System.out.println("==========Unigrams==========");
 		for (Unigram unigram : gestorDeNgrams.getUnigrams()) {
 			System.out.println(unigram);
 		}
 	}
 
 	public void imprimirBigrams() {
-		System.out.println("Bigrams");
+		System.out.println("\n==========Bigrams==========");
 		for (Bigram bigram : gestorDeNgrams.getBigrams()) {
 			System.out.println(bigram);
 		}

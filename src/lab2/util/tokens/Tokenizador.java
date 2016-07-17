@@ -12,13 +12,16 @@ import java.util.List;
 public class Tokenizador {
 	public List<Token> gerarTokens(String linha) {
 		List<Token> tokens = new ArrayList<Token>();
+		int tam;
 		for (String palavra : linha.replaceAll("[,.:;!?(){}\\[\\]<>/\\\\]", "").split("\\s+")) {
-			if (tokens.isEmpty()) tokens.add(new Token(palavra));
-			else for (Token token : tokens) {
-				if (palavra.equals(token.getPalvra())) {
-					token.incQtd();
-				} else tokens.add(new Token(palavra));
-			}
+			if (!tokens.isEmpty()) {
+				tam = tokens.size();
+				for (int i = 0; i < tam; i++) {
+					if (palavra.equals(tokens.get(i).getPalvra())) {
+						tokens.get(i).incQtd();
+					} else tokens.add(new Token(palavra));
+				}
+			} else tokens.add(new Token(palavra));
 		}
 		return tokens;
 	}

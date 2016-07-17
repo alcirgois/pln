@@ -17,14 +17,14 @@ public class GestorDeNgrams {
 	private Corpus corpus;
 	private List<Unigram> unigrams;
 	private List<Bigram> bigrams;
-	
+
 	public GestorDeNgrams(Corpus corpus) {
 		this.corpus = corpus;
 		unigrams = new ArrayList<Unigram>();
 		bigrams = new ArrayList<Bigram>();
 		gerarNgrams();
-	}	
-	
+	}
+
 	public List<Unigram> getUnigrams() {
 		return unigrams;
 	}
@@ -40,15 +40,19 @@ public class GestorDeNgrams {
 		long qtdTotal = 0;
 		for (String linha : corpus.getConjDeTreinamento()) {
 			tokens = tokenizador.gerarTokens(linha);
+			int tam;
 			for (Token token : tokens) {
 				qtdTotal += token.getQtd();
 				posAtual = tokens.indexOf(token);
 				if (posAtual == 0) gerarBigrams("<ini>", token.getPalvra());
-				for (Unigram unigram : unigrams) {
-					if (unigram.equals(token.getPalvra())) unigram.addQtd(token.getQtd());
-					else unigrams.add(new Unigram(token));
-				}
-				if (posAtual < tokens.size()-1) gerarBigrams(token.getPalvra(), tokens.get(posAtual + 1).getPalvra());
+				if (!unigrams.isEmpty()) {
+					tam = unigrams.size();
+					for (int i = 0; i < tam; i++) {
+						if (unigrams.get(i).equals(token.getPalvra())) unigrams.get(i).addQtd(token.getQtd());
+						else unigrams.add(new Unigram(token));
+					}
+				} else unigrams.add(new Unigram(token));
+				if (posAtual < tokens.size() - 1) gerarBigrams(token.getPalvra(), tokens.get(posAtual + 1).getPalvra());
 				else gerarBigrams(token.getPalvra(), "<fim>");
 			}
 		}
@@ -56,12 +60,16 @@ public class GestorDeNgrams {
 	}
 
 	private void gerarBigrams(String palavra, String palavraSeguinte) {
-		for (Bigram bigram : bigrams) {
-			if (bigram.equals(palavra, palavraSeguinte)) bigram.incQtd();
-			else bigrams.add(new Bigram(palavra, palavraSeguinte));
-		}
+		int tam;
+		if (!bigrams.isEmpty()) {
+			tam = bigrams.size();
+			for (int i = 0; i < tam; i++) {
+				if (bigrams.get(i).equals(palavra, palavraSeguinte)) bigrams.get(i).incQtd();
+				else bigrams.add(new Bigram(palavra, palavraSeguinte));
+			}
+		} else bigrams.add(new Bigram(palavra, palavraSeguinte));
 	}
-	
+
 	public void calcularP(long qtdTotal) {
 		for (Unigram unigram : unigrams) {
 			unigram.setP(qtdTotal);
