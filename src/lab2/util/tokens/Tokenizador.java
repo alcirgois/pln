@@ -19,8 +19,9 @@ public class Tokenizador {
 				for (int i = 0; i < tam; i++) {
 					if (palavra.equals(tokens.get(i).getPalvra())) {
 						tokens.get(i).incQtd();
-					} else tokens.add(new Token(palavra));
+					}
 				}
+				tokens.add(new Token(palavra));
 			} else tokens.add(new Token(palavra));
 		}
 		return tokens;

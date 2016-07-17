@@ -8,7 +8,7 @@ public class Bigram {
 
 	private String palavra, proxPalavra;
 	private long qtd;
-	private float p;
+	private double p;
 
 	public Bigram(String palavra, String proxPalavra) {
 		this.palavra = palavra;
@@ -31,19 +31,22 @@ public class Bigram {
 	public void incQtd() {
 		qtd++;
 	}
+	
+	public double getP() {
+		return p;
+	}
 
 	public void setP(long qtdDaPalavra) {
-		this.p = this.qtd / qtdDaPalavra;
+		p = ((double) qtd) / qtdDaPalavra;
 	}
 
 	public boolean equals(Object obj, Object obj2) {
-		if (!super.equals(obj)) return false;
-		if (proxPalavra.equals(obj2)) return true;
+		if (palavra.equals(obj) && proxPalavra.equals(obj2)) return true;
 		return false;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "("+proxPalavra+" | "+palavra+") : [qtd = " + qtd + ", p = " + p + "]";
+		return "(" + proxPalavra + " | " + palavra + ") : [qtd = " + qtd + ", p = " + p + "]";
 	}
 }

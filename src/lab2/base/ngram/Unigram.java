@@ -9,7 +9,7 @@ import lab2.util.tokens.Token;
 public class Unigram {
 	private String palavra;
 	private long qtd;
-	private float p;
+	private double p;
 
 	public Unigram(Token token) {
 		palavra = token.getPalvra();
@@ -28,19 +28,19 @@ public class Unigram {
 		this.qtd += qtd;
 	}
 
-	public float getP() {
+	public double getP() {
 		return p;
 	}
 
 	// P(palavra[i]) = qtd(palavra[i]) / qtd(palavras)
 	public void setP(long qtdTotal) {
-		this.p = qtd / qtdTotal;
+		p = ((double) qtd) / qtdTotal;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (getPalavra().equals(obj)) return true;
-		else return false;
+		if (palavra.equals(obj)) return true;
+		return false;
 	}
 
 	@Override

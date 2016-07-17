@@ -49,8 +49,8 @@ public class GestorDeNgrams {
 					tam = unigrams.size();
 					for (int i = 0; i < tam; i++) {
 						if (unigrams.get(i).equals(token.getPalvra())) unigrams.get(i).addQtd(token.getQtd());
-						else unigrams.add(new Unigram(token));
 					}
+					unigrams.add(new Unigram(token));
 				} else unigrams.add(new Unigram(token));
 				if (posAtual < tokens.size() - 1) gerarBigrams(token.getPalvra(), tokens.get(posAtual + 1).getPalvra());
 				else gerarBigrams(token.getPalvra(), "<fim>");
@@ -59,15 +59,15 @@ public class GestorDeNgrams {
 		calcularP(qtdTotal);
 	}
 
-	private void gerarBigrams(String palavra, String palavraSeguinte) {
+	private void gerarBigrams(String palavra, String proxPalavra) {
 		int tam;
 		if (!bigrams.isEmpty()) {
 			tam = bigrams.size();
 			for (int i = 0; i < tam; i++) {
-				if (bigrams.get(i).equals(palavra, palavraSeguinte)) bigrams.get(i).incQtd();
-				else bigrams.add(new Bigram(palavra, palavraSeguinte));
+				if (bigrams.get(i).equals(palavra, proxPalavra)) bigrams.get(i).incQtd();
 			}
-		} else bigrams.add(new Bigram(palavra, palavraSeguinte));
+			bigrams.add(new Bigram(palavra, proxPalavra));
+		} else bigrams.add(new Bigram(palavra, proxPalavra));
 	}
 
 	public void calcularP(long qtdTotal) {
