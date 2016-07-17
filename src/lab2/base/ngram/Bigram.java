@@ -4,7 +4,7 @@ package lab2.base.ngram;
  * @author Emanuel
  *
  */
-public class Bigram implements Comparable<Bigram> {
+public class Bigram implements ImplBigram, Comparable<Bigram> {
 
 	private String palavra, proxPalavra;
 	private long qtd;
@@ -42,6 +42,13 @@ public class Bigram implements Comparable<Bigram> {
 
 	public boolean equals(Object obj, Object obj2) {
 		if (palavra.equals(obj) && proxPalavra.equals(obj2)) return true;
+		return false;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (palavra.equals(((ImplBigram) obj).getPalavra())
+				&& proxPalavra.equals(((ImplBigram) obj).getProxPalavra())) return true;
 		return false;
 	}
 
