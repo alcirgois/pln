@@ -1,9 +1,12 @@
 package lab2.base.avalicao;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.List;
 
 import lab2.base.ngram.Bigram;
 import lab2.base.ngram.BigramMimico;
+import lab2.util.BigDecimalMath;
 
 public class Perplexidade {
 	
@@ -15,9 +18,8 @@ public class Perplexidade {
 		this.modelo = bigrams;
 	}
 	
-	public double calcular() {
-		double log = 0.0;
-		double prob_ = 1.0;
+	public BigDecimal calcular() {
+		BigDecimal prob = new BigDecimal("1.0");
 		
 		int n = 0;
 
@@ -28,26 +30,28 @@ public class Perplexidade {
 			for (String palavra: palavras) {
 				BigramMimico mimico = new BigramMimico(palavraAnterior, palavra);
 				if (modelo.contains(mimico)) {
-					double p = modelo.get(modelo.indexOf(mimico)).getP();
-					log += Math.log(p);
-					prob_ *= p;
-				} //else
-				// ??? ignorar é o mesmo que dizer log += 0 -> p = 1, o que não é verdade
+					BigDecimal p = modelo.get(modelo.indexOf(mimico)).getP();
+					prob = prob.multiply(p, MathContext.DECIMAL64);
+				} else {
+					prob = prob.multiply(new BigDecimal("0.00001"), MathContext.DECIMAL128);
+				}
 				palavraAnterior = palavra;
 			}
 			BigramMimico mimico = new BigramMimico(palavraAnterior, "<fim>");
 			if (modelo.contains(mimico)) {
-				double p = modelo.get(modelo.indexOf(mimico)).getP();
-				log += Math.log(p);
-				prob_ *= p;
-			} //else
-			// ??? ignorar é o mesmo que dizer prob *= 1, o que não é verdade
+				BigDecimal p = modelo.get(modelo.indexOf(mimico)).getP();
+				prob = prob.multiply(p, MathContext.DECIMAL64);
+			} else {
+				prob = prob.multiply(new BigDecimal("0.00001"), MathContext.DECIMAL128);
+			}
 		}
 		
-		double prob = Math.exp(log);
 		//******REMOVER*****************************
-		System.out.println(prob + " = " + prob_ + "?");
+		System.out.println(prob);
 		//******REMOVER*****************************
-		return Math.pow((1.0 / prob), (1.0 / n));
+		BigDecimal termo1 = (new BigDecimal("1")).divide(prob, MathContext.DECIMAL128);
+		BigDecimal termo2 = (new BigDecimal("1")).divide(new BigDecimal(n), MathContext.DECIMAL128);
+		
+		return BigDecimalMath.pow(termo1, termo2);
 	}
 }

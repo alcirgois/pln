@@ -1,5 +1,8 @@
 package lab2.base.ngram;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+
 import lab2.util.tokens.Token;
 
 /**
@@ -9,7 +12,7 @@ import lab2.util.tokens.Token;
 public class Unigram implements Comparable<Unigram> {
 	private String palavra;
 	private long qtd;
-	private double p;
+	private BigDecimal p;
 
 	public Unigram(Token token) {
 		palavra = token.getPalvra();
@@ -28,13 +31,15 @@ public class Unigram implements Comparable<Unigram> {
 		this.qtd += qtd;
 	}
 
-	public double getP() {
+	public BigDecimal getP() {
 		return p;
 	}
 
 	// P(palavra[i]) = qtd(palavra[i]) / qtd(palavras)
 	public void setP(long qtdTotal) {
-		p = ((double) qtd) / qtdTotal;
+		BigDecimal bigQtd = new BigDecimal(qtd);
+		BigDecimal bigQtdTotal = new BigDecimal(qtdTotal);
+		p = bigQtd.divide(bigQtdTotal, MathContext.DECIMAL64);
 	}
 
 	@Override

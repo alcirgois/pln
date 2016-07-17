@@ -1,5 +1,8 @@
 package lab2.base.ngram;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+
 /**
  * @author Emanuel
  *
@@ -8,7 +11,7 @@ public class Bigram implements ImplBigram, Comparable<Bigram> {
 
 	private String palavra, proxPalavra;
 	private long qtd;
-	private double p;
+	private BigDecimal p;
 
 	public Bigram(String palavra, String proxPalavra) {
 		this.palavra = palavra;
@@ -32,12 +35,14 @@ public class Bigram implements ImplBigram, Comparable<Bigram> {
 		qtd++;
 	}
 
-	public double getP() {
+	public BigDecimal getP() {
 		return p;
 	}
 
 	public void setP(long qtdDaPalavra) {
-		p = ((double) qtd) / qtdDaPalavra;
+		BigDecimal bigQtd = new BigDecimal(qtd);
+		BigDecimal bigQtdDaPalavra = new BigDecimal(qtdDaPalavra);
+		p = bigQtd.divide(bigQtdDaPalavra, MathContext.DECIMAL64);
 	}
 
 	public boolean equals(Object obj, Object obj2) {

@@ -64,7 +64,7 @@ public class Teste {
 	}
 
 	public static void main(String[] args) {
-		 Teste teste = new Teste("res/lab2/Lorem ipsum.txt");
+		 Teste teste = new Teste("res/lab2/teste.txt");
 		 teste.imprimirUnigrams();
 		 teste.imprimirBigrams();
 		 teste.imprimirSuavizacaoLaplaceAddOne();
