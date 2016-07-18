@@ -13,7 +13,9 @@ public class GeradorDeTxt {
 	private FileManager gestorArq;
 	private Random aleatorio;
 	private final String ARQUIVO = "res/lab2/teste.txt";
-	private char[] caracteres = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ¡…Õ”⁄√’¬ Œ‘€¿»Ã“Ÿ«".toCharArray();
+	private char[] letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toLowerCase().toCharArray();
+	private char[] letrasEspeciais = "¡…Õ”⁄√’¬ Œ‘€¿»Ã“Ÿ«".toLowerCase().toCharArray();
+	private char[] numeros = "0123456789".toCharArray();
 
 	public GeradorDeTxt() {
 		gestorArq = new FileManager();
@@ -23,13 +25,12 @@ public class GeradorDeTxt {
 
 	private void gerarTexto() {
 		List<String> texto = new ArrayList<String>();
-		StringBuffer buffer = new StringBuffer();
-		for (int i = 0; i < gerarNumLinhas(); i++) {
-			for (int j = 0; j < gerarNumPalavras(); j++) {
-				buffer.append(gerarPalavra());
-				if (!(j < gerarNumPalavras() - 1)) buffer.append(" ");
-			}
-			texto.add(buffer.toString());
+		int numLinhas = 10 + aleatorio.nextInt(91);
+		System.out.println("N˙mero de linhas  = " + numLinhas);
+		for (int i = 0; i < numLinhas; i++) {
+			System.out.println("==========Linha "+i+"==========");
+			texto.add(gerarLinha());
+			System.out.println("============================");
 		}
 		try {
 			gestorArq.writeToFile(ARQUIVO, texto);
@@ -38,25 +39,33 @@ public class GeradorDeTxt {
 		}
 	}
 
-	private String gerarPalavra() {
+	private String gerarLinha() {
 		StringBuffer buffer = new StringBuffer();
-		for (int i = 0; i < gerarTamPalavra(); i++) {
-			int index = aleatorio.nextInt(caracteres.length);
-			buffer.append(caracteres[index]);
+		int qtd = 5 + aleatorio.nextInt(6);
+		System.out.println("Qtd de palavras = " + qtd);
+		for (int j = 0; j < qtd; j++) {
+			buffer.append(gerarPalavra(100 / qtd));
+			if (j < qtd - 1) buffer.append(" ");
+			else buffer.append(".");
 		}
 		return buffer.toString();
 	}
 
-	private int gerarNumLinhas() {
-		return 10 + aleatorio.nextInt(90);
+	private String gerarPalavra(int limite) {
+		StringBuffer buffer = new StringBuffer();
+		int num, tam = 1 + aleatorio.nextInt(limite);
+		System.out.println("Tamanho da palavra = " + tam);
+		for (int i = 0; i < tam; i++) {
+			num = aleatorio.nextInt(10);
+			if (num < 6) buffer.append(gerarCaracter(letras));
+			else if (num < 9) buffer.append(gerarCaracter(numeros));
+			else buffer.append(gerarCaracter(letrasEspeciais));
+		}
+		return buffer.toString();
 	}
 
-	private int gerarNumPalavras() {
-		return 10 + aleatorio.nextInt(10);
-	}
-
-	private int gerarTamPalavra() {
-		return 1 + aleatorio.nextInt(9);
+	private char gerarCaracter(char[] caracteres) {
+		return caracteres[aleatorio.nextInt(caracteres.length)];
 	}
 
 	public static void main(String[] args) {
