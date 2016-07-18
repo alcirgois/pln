@@ -9,6 +9,7 @@ import lab2.base.avalicao.Perplexidade;
 import lab2.base.ngram.Bigram;
 import lab2.base.ngram.Unigram;
 import lab2.base.suavizacao.LaplaceAddOne;
+import lab2.util.GeradorDeTxt;
 
 /**
  * @author Emanuel
@@ -65,10 +66,11 @@ public class Teste {
 	}
 
 	public static void main(String[] args) {
-		Teste teste = new Teste("res/lab2/texto(320).txt");
+		new GeradorDeTxt(30);
+		Teste teste = new Teste("res/lab2/teste.txt");
 		// teste.imprimirUnigrams();
 		// teste.imprimirBigrams();
-		// teste.imprimirSuavizacaoLaplaceAddOne();
-		teste.imprimirAvaliacao();
+		teste.imprimirSuavizacaoLaplaceAddOne();
+		// teste.imprimirAvaliacao();
 	}
 }

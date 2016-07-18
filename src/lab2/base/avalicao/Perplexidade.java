@@ -45,9 +45,6 @@ public class Perplexidade {
 			}
 		}
 
-		// ******REMOVER*****************************
-		// System.out.println(prob);
-		// ******REMOVER*****************************
 		BigDecimal termo1 = (new BigDecimal("1")).divide(prob, MathContext.DECIMAL128);
 		BigDecimal termo2 = (new BigDecimal("1")).divide(new BigDecimal(n), MathContext.DECIMAL128);
 
