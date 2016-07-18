@@ -21,15 +21,22 @@ public class Teste {
 	private List<Unigram> unigrams;
 	private List<Bigram> bigrams;
 	private List<Bigram> modelo;
+	private Perplexidade avaliador;
+	private LaplaceAddOne lapAddOne;
 
 	public Teste(String arquivo) {
 		corpus = new Corpus(arquivo);
-		gestorDeNgrams = new GestorDeNgrams(corpus);
+		gestorDeNgrams = new GestorDeNgrams(corpus.getConjDeTreinamento());
+		unigrams = gestorDeNgrams.getUnigrams();
+		bigrams = gestorDeNgrams.getBigrams();
+		lapAddOne = new LaplaceAddOne(unigrams, bigrams);
+		modelo = lapAddOne.suavizar(gestorDeNgrams.getQtdLinhas());
+		if (modelo == null) modelo = bigrams;
+		avaliador = new Perplexidade(corpus.getConjDeTeste(), modelo);
 	}
 
 	public void imprimirUnigrams() {
 		System.out.println("====================Unigrams====================");
-		unigrams = gestorDeNgrams.getUnigrams();
 		Collections.sort(unigrams);
 		for (Unigram unigram : unigrams) {
 			System.out.println(unigram);
@@ -38,36 +45,30 @@ public class Teste {
 
 	public void imprimirBigrams() {
 		System.out.println("\n====================Bigrams====================");
-		bigrams = gestorDeNgrams.getBigrams();
 		Collections.sort(bigrams);
 		for (Bigram bigram : bigrams) {
 			System.out.println(bigram);
 		}
 	}
-	
-	public void imprimirAvaliacao() {
-		System.out.println("\n==================Perplexidade=================");
-		if (modelo == null) modelo = bigrams;
-		Perplexidade avaliador = new Perplexidade(corpus.getConjDeTeste(), modelo);
-		System.out.println("Resultado de Avaliação: " + avaliador.calcular()
-				+ " de Perplexidade");
-	}
-	
+
 	public void imprimirSuavizacaoLaplaceAddOne() {
 		System.out.println("\n============Laplace Smoothing Add-1============");
-		LaplaceAddOne lapAddOne = new LaplaceAddOne(unigrams, bigrams);
-		modelo = lapAddOne.suavizar();
-		//Collections.sort(modelo);
+		Collections.sort(modelo);
 		for (Bigram bigram : modelo) {
 			System.out.println(bigram);
 		}
 	}
 
+	public void imprimirAvaliacao() {
+		System.out.println("\n==================Perplexidade=================");
+		System.out.println("Resultado de Avaliação: " + avaliador.calcular());
+	}
+
 	public static void main(String[] args) {
-		 Teste teste = new Teste("res/lab2/teste.txt");
-		 teste.imprimirUnigrams();
-		 teste.imprimirBigrams();
-		 teste.imprimirSuavizacaoLaplaceAddOne();
-		 teste.imprimirAvaliacao();
+		Teste teste = new Teste("res/lab2/teste.txt");
+		teste.imprimirUnigrams();
+		teste.imprimirBigrams();
+		teste.imprimirSuavizacaoLaplaceAddOne();
+		teste.imprimirAvaliacao();
 	}
 }

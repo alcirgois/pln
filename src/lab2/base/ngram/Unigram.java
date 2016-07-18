@@ -55,6 +55,6 @@ public class Unigram implements Comparable<Unigram> {
 	
 	@Override
 	public int compareTo(Unigram unigram) {
-		return this.getPalavra().compareTo(unigram.getPalavra());
+		return this.getP().compareTo(unigram.getP());
 	}
 }

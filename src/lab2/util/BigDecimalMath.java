@@ -1,8 +1,9 @@
 package lab2.util ;
 
-import java.security.* ;
-import java.util.* ;
-import java.math.* ;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.MathContext;
+import java.security.ProviderException;
 
 
 /** BigDecimal special functions.

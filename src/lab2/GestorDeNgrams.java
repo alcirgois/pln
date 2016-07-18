@@ -3,7 +3,6 @@ package lab2;
 import java.util.ArrayList;
 import java.util.List;
 
-import lab2.base.Corpus;
 import lab2.base.ngram.Bigram;
 import lab2.base.ngram.Unigram;
 import lab2.util.tokens.Token;
@@ -14,12 +13,13 @@ import lab2.util.tokens.Tokenizador;
  *
  */
 public class GestorDeNgrams {
-	private Corpus corpus;
+	private List<String> texto;
 	private List<Unigram> unigrams;
 	private List<Bigram> bigrams;
+	private int qtdLinhas;
 
-	public GestorDeNgrams(Corpus corpus) {
-		this.corpus = corpus;
+	public GestorDeNgrams(List<String> texto) {
+		this.texto = texto;
 		unigrams = new ArrayList<Unigram>();
 		bigrams = new ArrayList<Bigram>();
 		gerarNgrams();
@@ -31,6 +31,10 @@ public class GestorDeNgrams {
 
 	public List<Bigram> getBigrams() {
 		return bigrams;
+	}	
+
+	public int getQtdLinhas() {
+		return qtdLinhas;
 	}
 
 	public void gerarNgrams() {
@@ -38,7 +42,8 @@ public class GestorDeNgrams {
 		Tokenizador tokenizador = new Tokenizador();
 		int posAtual = 0;
 		long qtdTotal = 0;
-		for (String linha : corpus.getConjDeTreinamento()) {
+		qtdLinhas = texto.size();
+		for (String linha : texto) {
 			tokens = tokenizador.gerarTokens(linha);
 			int tam;
 			boolean achou;
@@ -71,7 +76,7 @@ public class GestorDeNgrams {
 			tam = bigrams.size();
 			achou = false;
 			for (int i = 0; i < tam; i++) {
-				if (bigrams.get(i).equals(palavra, proxPalavra)) {
+				if (bigrams.get(i).equals(new Bigram(palavra, proxPalavra))) {
 					bigrams.get(i).incQtd();
 					achou = true;
 				}
@@ -85,7 +90,7 @@ public class GestorDeNgrams {
 			unigram.setP(qtdTotal);
 		}
 		for (Bigram bigram : bigrams) {
-			if (bigram.getPalavra().equals("<ini>")) bigram.setP(corpus.getConjDeTreinamento().size());
+			if (bigram.getPalavra().equals("<ini>")) bigram.setP(qtdLinhas);
 			else for (Unigram unigram : unigrams) {
 				if (bigram.getPalavra().equals(unigram.getPalavra())) {
 					bigram.setP(unigram.getQtd());

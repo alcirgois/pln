@@ -7,7 +7,7 @@ import java.math.MathContext;
  * @author Emanuel
  *
  */
-public class Bigram implements ImplBigram, Comparable<Bigram> {
+public class Bigram implements Comparable<Bigram> {
 
 	private String palavra, proxPalavra;
 	private long qtd;
@@ -34,6 +34,10 @@ public class Bigram implements ImplBigram, Comparable<Bigram> {
 	public void incQtd() {
 		qtd++;
 	}
+	
+	public void setQtd(long qtd) {
+		this.qtd = qtd;
+	}
 
 	public BigDecimal getP() {
 		return p;
@@ -45,15 +49,10 @@ public class Bigram implements ImplBigram, Comparable<Bigram> {
 		p = bigQtd.divide(bigQtdDaPalavra, MathContext.DECIMAL64);
 	}
 
-	public boolean equals(Object obj, Object obj2) {
-		if (palavra.equals(obj) && proxPalavra.equals(obj2)) return true;
-		return false;
-	}
-	
 	@Override
 	public boolean equals(Object obj) {
-		if (palavra.equals(((ImplBigram) obj).getPalavra())
-				&& proxPalavra.equals(((ImplBigram) obj).getProxPalavra())) return true;
+		if (palavra.equals(((Bigram) obj).getPalavra()) && proxPalavra.equals(((Bigram) obj).getProxPalavra()))
+			return true;
 		return false;
 	}
 
@@ -64,11 +63,6 @@ public class Bigram implements ImplBigram, Comparable<Bigram> {
 
 	@Override
 	public int compareTo(Bigram bigram) {
-		if (!this.getPalavra().equals(bigram.getPalavra())) return this.getPalavra().compareTo(bigram.getPalavra());
-		else return this.getProxPalavra().compareTo(bigram.getProxPalavra());
-	}
-
-	public void setQtd(long qtd) {
-		this.qtd = qtd;
+		return this.getP().compareTo(bigram.getP());
 	}
 }

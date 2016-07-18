@@ -1,0 +1,5 @@
+1 a  b 23 ab c 12
+cb ac 2 32 13 31 1
+21 ca  b 3 ba c a
+a 2 c ac 12 32 bc
+cb 1 23 c 13 b 23
