@@ -66,11 +66,11 @@ public class Teste {
 	}
 
 	public static void main(String[] args) {
-		new GeradorDeTxt(30);
+		new GeradorDeTxt(80);
 		Teste teste = new Teste("res/lab2/teste.txt");
 		// teste.imprimirUnigrams();
 		// teste.imprimirBigrams();
-		teste.imprimirSuavizacaoLaplaceAddOne();
-		// teste.imprimirAvaliacao();
+		// teste.imprimirSuavizacaoLaplaceAddOne();
+		teste.imprimirAvaliacao();
 	}
 }

@@ -59,7 +59,7 @@ public class Principal {
 	}
 
 	public static void main(String[] args) {
-		Principal principal = new Principal("res/lab2/texto(320).txt");
+		Principal principal = new Principal("res/lab2/(251).txt");
 		principal.imprimirUnigrams();
 		principal.imprimirBigrams();
 		principal.imprimirSuavizacaoLaplaceAddOne();
