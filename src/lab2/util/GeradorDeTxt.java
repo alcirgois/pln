@@ -16,10 +16,12 @@ public class GeradorDeTxt {
 	private char[] letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toLowerCase().toCharArray();
 	private char[] letrasEspeciais = "¡…Õ”⁄√’¬ Œ‘€¿»Ã“Ÿ«".toLowerCase().toCharArray();
 	private char[] numeros = "0123456789".toCharArray();
+	private int qtdTotal;
 
 	public GeradorDeTxt() {
 		gestorArq = new FileManager();
 		aleatorio = new Random();
+		qtdTotal = 0;
 		gerarTexto();
 	}
 
@@ -34,6 +36,7 @@ public class GeradorDeTxt {
 		}
 		try {
 			gestorArq.writeToFile(ARQUIVO, texto);
+			System.out.println("Arquivo "+ARQUIVO+" gerado com " + numLinhas+" linhas e "+qtdTotal+" palavras");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -42,6 +45,7 @@ public class GeradorDeTxt {
 	private String gerarLinha() {
 		StringBuffer buffer = new StringBuffer();
 		int qtd = 5 + aleatorio.nextInt(6);
+		qtdTotal += qtd;
 		System.out.println("Qtd de palavras = " + qtd);
 		for (int j = 0; j < qtd; j++) {
 			buffer.append(gerarPalavra(100 / qtd));
