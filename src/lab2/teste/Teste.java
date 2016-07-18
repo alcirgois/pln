@@ -65,10 +65,10 @@ public class Teste {
 	}
 
 	public static void main(String[] args) {
-		Teste teste = new Teste("res/lab2/teste.txt");
-		teste.imprimirUnigrams();
-		teste.imprimirBigrams();
-		teste.imprimirSuavizacaoLaplaceAddOne();
+		Teste teste = new Teste("res/lab2/texto(320).txt");
+		// teste.imprimirUnigrams();
+		// teste.imprimirBigrams();
+		// teste.imprimirSuavizacaoLaplaceAddOne();
 		teste.imprimirAvaliacao();
 	}
 }

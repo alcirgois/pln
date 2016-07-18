@@ -13,24 +13,24 @@ import java.util.List;
  */
 public class FileManager {
 
-    public List<String> readFile(String filename) throws IOException {
-        List<String> lines;
-        try {
-            lines=Files.readAllLines(Paths.get(filename), Charset.forName("Cp1252"));
-        } catch (MalformedInputException e){
-            lines=Files.readAllLines(Paths.get(filename));
-        }
-        return lines;
-    }
+	public List<String> readFile(String filename) throws IOException {
+		List<String> lines;
+		try {
+			lines = Files.readAllLines(Paths.get(filename), Charset.forName("Cp1252"));
+		} catch (MalformedInputException e) {
+			lines = Files.readAllLines(Paths.get(filename));
+		}
+		return lines;
+	}
 
-    public boolean writeToFile(String filename, List<String> lines) throws IOException {
-        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(filename))) {
-            for (String line : lines) {
-                writer.write(line);
-                writer.newLine();
-            }
-        }
-        return true;
-    }
+	public boolean writeToFile(String filename, List<String> lines) throws IOException {
+		try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(filename))) {
+			for (String line : lines) {
+				writer.write(line);
+				writer.newLine();
+			}
+		}
+		return true;
+	}
 
 }

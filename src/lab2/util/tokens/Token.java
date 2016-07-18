@@ -14,23 +14,22 @@ public class Token {
 		this.palavra = palavra;
 		qtd = 1;
 	}
-	
+
 	public long getQtd() {
-        return qtd;
-    }
+		return qtd;
+	}
 
-    public void incQtd() {
-        qtd++;
-    }
+	public void incQtd() {
+		qtd++;
+	}
 
-    public String getPalvra() {     
-    	return palavra;
-    }
+	public String getPalvra() {
+		return palavra;
+	}
 
 	@Override
 	public String toString() {
 		return palavra + " : " + qtd;
 	}
-    
-    
+
 }

@@ -52,7 +52,7 @@ public class Unigram implements Comparable<Unigram> {
 	public String toString() {
 		return palavra + " : [qtd = " + qtd + ", p = " + p + "]";
 	}
-	
+
 	@Override
 	public int compareTo(Unigram unigram) {
 		return this.getP().compareTo(unigram.getP());

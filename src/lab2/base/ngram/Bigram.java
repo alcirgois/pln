@@ -34,7 +34,7 @@ public class Bigram implements Comparable<Bigram> {
 	public void incQtd() {
 		qtd++;
 	}
-	
+
 	public void setQtd(long qtd) {
 		this.qtd = qtd;
 	}

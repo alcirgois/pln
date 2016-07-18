@@ -31,7 +31,7 @@ public class GestorDeNgrams {
 
 	public List<Bigram> getBigrams() {
 		return bigrams;
-	}	
+	}
 
 	public int getQtdLinhas() {
 		return qtdLinhas;
