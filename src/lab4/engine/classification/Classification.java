@@ -1,4 +1,4 @@
-package lab4.tools;
+package lab4.engine.classification;
 
 import static java.lang.StrictMath.log;
 
@@ -14,6 +14,7 @@ import org.cogroo.text.Sentence;
 import org.cogroo.text.Token;
 import org.cogroo.text.impl.DocumentImpl;
 
+import lab4.engine.SearchAgent;
 import lab4.util.PostTokenizer;
 
 /**

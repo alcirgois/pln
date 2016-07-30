@@ -1,4 +1,4 @@
-package lab4.util;
+package lab4.engine.classification;
 
 import lab4.util.FileManager;
 import lab4.model.Document;

@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import lab4.engine.classification.MachineLearningHandler;
+import lab4.engine.classification.TermDocumentHelper;
 import lab4.model.Document;
 import lab4.util.FileManager;
-import lab4.util.MachineLearningHandler;
-import lab4.util.TermDocumentHelper;
 import ptstemmer.exceptions.PTStemmerException;
 
 /**
