@@ -23,7 +23,7 @@ public class MaxentTest {
 					wrong++;
 				}
 			}
-			System.out.println("Predições coretas " + correct);
+			System.out.println("Predições corretas " + correct);
 			System.out.println("Predições erradas " + wrong);
 			System.out.println("Taxa de erro " + wrong / (correct + wrong));
 		} catch (Exception e) {
