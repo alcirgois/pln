@@ -15,12 +15,14 @@ import org.cogroo.text.Token;
 import org.cogroo.text.impl.DocumentImpl;
 
 import lab4.engine.SearchAgent;
-import lab4.util.PostTokenizer;
+import lab4.util.FileManager;
 
 /**
  * Created by Ariel on 23-Jul-16.
  */
 public class Classification {
+
+    StringBuilder positives = new StringBuilder(), negatives = new StringBuilder();
 
     // returns Semantic Orientation from a review
     public void SemanticOrientation (String review) {
@@ -38,18 +40,14 @@ public class Classification {
         document.setText(review);
         cogroo.analyze(document);
 
-        System.out.println("Review: " + document.getText());
-
         // get sentence from review
         for (Sentence sentence : document.getSentences()) {
             // get tokens from sentence
             for (Token token : sentence.getTokens()) {
-                token.setLexeme(token.getLexeme().replace("'", "").replace(".", "").replace("<br>", ""));
+                token.setLexeme(token.getLexeme().replace("'", "").replace(".", "").replace("<br>", "").replace(",", ""));
                 tokens.add(token);
             }
         }
-
-        tokens = PostTokenizer.refineTokens(tokens);
 
         tokens.forEach((token) -> {
             if(token.getPOSTag().contentEquals("adj") || token.getLexeme().contentEquals("adv")) {
@@ -65,21 +63,30 @@ public class Classification {
         // Generate SO for each phrase.
         for (String phrase : phrases) {
             try {
-                SO += log((SearchAgent.getGoogleHits("(\"muito bom\" OR \"vale a pena\" OR \"recomendo\") ~"
-                        +phrase.toString()+" -site:filmow.com -site:adorocinema.com.br"))/
-                        (SearchAgent.getGoogleHits("(\"ruim\" OR \"chato\" OR \"cansativo\" OR \"não recomendo\") ~"
-                        +phrase.toString()+ " -site:filmow.com -site:adorocinema.com.br"))+0.01);
+                SO += log((SearchAgent.getHits("bing",phrase.toString()+ " \"muito bom\"" +" " +
+                        "-site:filmow.com -site:adorocinema.com.br") +0.01)/(
+                        SearchAgent.getHits("bing",phrase.toString()+" \"ruim\"" +
+                                " -site:filmow.com -site:adorocinema.com.br")+0.01));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            System.out.println("Phrase: "+ phrase.toString() +" - Cumulative SO: " + SO);
+         //   System.out.println("Phrase: "+ phrase.toString() +" - Cumulative SO: " + SO);
         }
 
-        if (SO > 0)
+        if (SO > 0) {
             System.out.println("Positive: " + review.toString());
-        else if (SO < 0)
+            positives.append(review.toString() + "\n");
+        }
+        else if (SO < 0) {
             System.out.println("Negative: " + review.toString());
-
+            negatives.append(review.toString() + "\n");
+        }
     }
 
+    public void generateCorpora() throws IOException {
+        (new FileManager()).writeToFile("corpus/corpus_positives_reviews.txt", positives.toString());
+        (new FileManager()).writeToFile("corpus/corpus_negatives_reviews.txt", negatives.toString());
+
+        System.out.println("Reviews classificadas e corpora gerados.\n");
+    }
 }

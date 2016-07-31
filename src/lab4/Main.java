@@ -1,70 +1,61 @@
 package lab4;
 
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.InputStream;
+import java.util.zip.GZIPInputStream;
 
-import lab4.engine.classification.MachineLearningHandler;
-import lab4.engine.classification.TermDocumentHelper;
-import lab4.model.Document;
-import lab4.util.FileManager;
-import ptstemmer.exceptions.PTStemmerException;
+import lab4.engine.SearchAgent;
+import opennlp.maxent.io.GISModelReader;
+import opennlp.model.DataReader;
+import opennlp.model.MaxentModel;
+import opennlp.model.PlainTextFileDataReader;
 
 /**
- * Created by Ariel on 22-Jul-16.
+ * Created by Ariel on 29-Jul-16.
  */
-
 public class Main {
 
-    public static void main(String[] args) throws IOException, PTStemmerException {
+	public static void main(String[] args) throws IOException {
 
-        // Tarefa 01
-        FileManager fm = new FileManager();
-        List<Document> documents = new ArrayList<>();
-        System.out.println("******Lendo arquivos******");
-        documents.add(new Document("saude1",fm.readFileToString("res/lab4/corpus_saude1.txt"),"saude"));
-        documents.add(new Document("saude2",fm.readFileToString("res/lab4/corpus_saude2.txt"),"saude"));
-        documents.add(new Document("tecnologia1",fm.readFileToString("res/lab4/corpus_tecnologia1.txt"),"tecnologia"));
-        documents.add(new Document("tecnologia2",fm.readFileToString("res/lab4/corpus_tecnologia2.txt"),"tecnologia"));
-        documents.add(new Document("negocios1",fm.readFileToString("res/lab4/corpus_negocios1.txt"),"negocios"));
-        documents.add(new Document("negocios2",fm.readFileToString("res/lab4/corpus_negocios2.txt"),"negocios"));
+		/*
+		 * // Read reviews and get 1000 most important by idf FileManager fm =
+		 * new FileManager(); List<Document> documents = new ArrayList<>();
+		 * System.out.println("******Lendo reviews******"); documents.add(new
+		 * Document("positivas",fm.readFileToString(
+		 * "corpus/corpus_positives_reviews.txt"),"positive"));
+		 * documents.add(new Document("negativas",fm.readFileToString(
+		 * "corpus/corpus_negatives_reviews.txt"),"negative"));
+		 * 
+		 * TermDocumentHelper termDocumentHelper = new
+		 * TermDocumentHelper(documents); System.out.println(
+		 * "******Preparando Matriz de Importancia TermoXDocumento******");
+		 * termDocumentHelper.init(); String[] terms =
+		 * termDocumentHelper.getTermsbyIDF();
+		 * 
+		 * DataIndexer indexer = new OnePassDataIndexer(new
+		 * FileEventStream("corpus/corpus_positives_reviews.txt")); MaxentModel
+		 * trainedMaxentModel = GIS.trainModel(10000, indexer); // 10.000
+		 * iterations
+		 * 
+		 * // Storing the trained model into a file for later use (gzipped) File
+		 * outFile = new File("trained-model.maxent.gz"); AbstractModelWriter
+		 * writer = new SuffixSensitiveGISModelWriter((AbstractModel)
+		 * trainedMaxentModel, outFile); writer.persist();
+		 */
 
-        System.out.println("\nTarefa 1: ");
+		// Loading the gzipped model from a file
+		FileInputStream inputStream = new FileInputStream("trained-model.maxent.gz");
+		InputStream decodedInputStream = new GZIPInputStream(inputStream);
+		DataReader modelReader = new PlainTextFileDataReader(decodedInputStream);
+		MaxentModel loadedMaxentModel = new GISModelReader(modelReader).getModel();
 
-        // Tarefa 01
-        TermDocumentHelper termDocumentHelper = new TermDocumentHelper(documents);
-        System.out.println("******Preparando Matriz de Importancia TermoXDocumento******");
-        termDocumentHelper.init();
-        termDocumentHelper.printImportanceMatrix(false);
-        termDocumentHelper.printImportanceMatrix(true);
-        MachineLearningHandler machineLearningHandler = new MachineLearningHandler();
-        machineLearningHandler.knn("Importance_Matrix.csv",0,1,true);
-
-        System.out.println("\nTarefa 2: ");
-
-        //Tarefa 02
-        System.out.println("******Preparando Matriz de TF TermoXDocumento******");
-        termDocumentHelper.printTFMatrix(true, "");
-        termDocumentHelper.printTFMatrix(false, "");
-        machineLearningHandler.naiveBayes("TF_Matrix.csv",0,true);
-
-        System.out.println("\nTarefa 3: ");
-
-        //Tarefa 03
-        FileManager fm2 = new FileManager();
-        List<Document> reviews = new ArrayList<>();
-        System.out.println("******Lendo reviews******");
-        reviews.add(new Document("positiva1", fm2.readFileToString("res/lab4/corpus_filmow_positivas.txt"), "Reviews Positivas"));
-        reviews.add(new Document("positiva2", fm2.readFileToString("res/lab4/corpus_adorocinema_positivas.txt"), "Reviews Positivas"));
-        reviews.add(new Document("negativa1", fm2.readFileToString("res/lab4/corpus_filmow_negativas.txt"), "Reviews Negativas"));
-        reviews.add(new Document("negativa2", fm2.readFileToString("res/lab4/corpus_adorocinema_negativas.txt"), "Reviews Negativas"));
-        termDocumentHelper = new TermDocumentHelper(reviews);
-        termDocumentHelper.setBTFMode(true);
-        termDocumentHelper.init();
-        System.out.println("******Preparando Matriz de TF TermoXDocumento******");
-        termDocumentHelper.printTFMatrix(true, "TF_Matrix2");
-        termDocumentHelper.printTFMatrix(false, "TF_Matrix2");
-        machineLearningHandler.naiveBayes("TF_Matrix2.csv",0,true);
-    }
-
+		// Now predicting the outcome using the loaded model
+		String[] context = { SearchAgent.getReview("filmow", "") };
+		double[] outcomeProbs = loadedMaxentModel.eval(context);
+		String outcome = loadedMaxentModel.getBestOutcome(outcomeProbs);
+		String outcome2 = loadedMaxentModel.getAllOutcomes(outcomeProbs);
+		System.out.println(outcome2);
+		System.out.println(outcome);
+	}
 }

@@ -1,11 +1,14 @@
 package lab4.engine.classification;
 
-import lab4.util.FileManager;
-import lab4.model.Document;
-
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import lab4.model.Document;
+import lab4.util.FileManager;
 
 /**
  * Created by ericm on 23-Jul-16.
@@ -106,6 +109,15 @@ public class TermDocumentHelper {
         });
         FileManager fm = new FileManager();
         fm.writeToFile(headers?"Importance_Matrix_headers.csv":"Importance_Matrix.csv",stringBuilder.toString());
+    }
+
+    public String[] getTermsByIDF () {
+        Map<String, Double> terms =
+                idfs.entrySet().stream()
+                        .sorted(Map.Entry.comparingByKey(Comparator.reverseOrder()))
+                        .limit(1000)
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        return (String[]) terms.keySet().toArray();
     }
 
     public void printTFMatrix(boolean headers, String name) throws IOException {
