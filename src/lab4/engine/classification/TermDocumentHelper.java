@@ -1,6 +1,7 @@
 package lab4.engine.classification;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -117,7 +118,8 @@ public class TermDocumentHelper {
                         .sorted(Map.Entry.comparingByKey(Comparator.reverseOrder()))
                         .limit(1000)
                         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-        return (String[]) terms.keySet().toArray();
+        Object[] objects = terms.keySet().toArray();
+        return Arrays.asList(objects).toArray(new String[objects.length]);
     }
 
     public void printTFMatrix(boolean headers, String name) throws IOException {

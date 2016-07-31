@@ -50,7 +50,7 @@ public class Test {
 		System.out.println("******Treinando o Modelo Maxent******");
 		try {
 			DataIndexer dataIndexer = new OnePassDataIndexer(
-					new FileEventStream("res/lab4/corpus_positives_reviews.txt"));
+					new FileEventStream("res/lab4/corpus_positives_reviews.txt"), 2);
 			MaxentModel maxentModel = MaxentTrainer.trainModel(dataIndexer, 10000);
 			MaxentTrainer.saveModel("test", (AbstractModel) maxentModel);
 		} catch (IOException e) {
@@ -61,7 +61,7 @@ public class Test {
 	public String getPrediction(boolean onlyBest) {
 		System.out.println("******Prevendo a classe******");
 		MaxentModel maxentModel = MaxentTrainer.loadModel("test");
-		String context[] = { "muito" };
+		String context[] = generateIDF();
 		double outcomeProbs[] = maxentModel.eval(context);
 		if (onlyBest) return maxentModel.getBestOutcome(outcomeProbs);
 		else return maxentModel.getAllOutcomes(outcomeProbs);
@@ -69,7 +69,7 @@ public class Test {
 
 	public static void main(String[] args) {
 		Test test = new Test();
-		// test.trainMaxentModel();
+		test.trainMaxentModel();
 		System.out.println(test.getPrediction(false));
 	}
 }
