@@ -1,4 +1,4 @@
-package lab4.engine.classification;
+package lab4.test;
 
 import opennlp.model.DataIndexer;
 import opennlp.model.FileEventStream;

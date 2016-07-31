@@ -1,100 +1,44 @@
 package lab4.engine.classification;
 
-import java.io.IOException;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import lab4.model.Document;
-import lab4.util.FileManager;
 
 /**
  * Created by Ariel on 31-Jul-16.
  */
-
 public class MachineLearningHandler {
 
-	private List<Document> documents;
-	private HashMap<String, Long> idfs;
+    public void getStatistics(List<Document> documents, List<String> classes) {
+        int results[] = {0, 0, 0, 0}; //results[0] = nTrue, results[1] = nWrong, results[2] = nTruePositives, results[3] = nFalsePositives
 
-	public MachineLearningHandler(List<Document> documents) {
-		this.documents = documents;
-		idfs = new HashMap<>();
-	}
+        documents.forEach(document -> {
+            if (classes.remove(0).equals(document.getClasse())) {
+                results[0]++;
+                if (document.getClasse() == "positivas")
+                    results[2]++;
+            } else {
+                System.out.println("Erro ao classificar instancia: " + (results[0] + results[1]));
+                results[1]++;
+                if (document.getClasse() == "positivas")
+                    results[3]++;
+            }
+        });
 
-	public void init() {
-		populateTermFrequency();
-		populateIDF();
-		populateTermImportance();
-	}
+        System.out.println("\n------Calculando taxa de erros e acertos------\n");
 
-	public void generateTrainingModel(String filename) throws IOException {
-		StringBuilder stringBuilder = new StringBuilder();
-		Map<String, Long> terms = idfs.entrySet().stream().sorted(Map.Entry.comparingByKey(Comparator.reverseOrder()))
-				.limit(1000).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-
-		documents.forEach(document -> {
-			stringBuilder.append("class=" + document.getName()).append(" ");
-			for (Map.Entry<String, Long> term : terms.entrySet()) {
-				long aLong = Math.round(document.getTermImportance().get(term.getKey()));
-				stringBuilder.append(term.getKey() + "=" + aLong).append(" ");
-			}
-			stringBuilder.append(System.getProperty("line.separator"));
-		});
-
-		(new FileManager()).writeToFile(filename, stringBuilder.toString());
-	}
-
-	private void populateTermFrequency() {
-		documents.forEach(document -> document.init(false));
-	}
-
-	public List<Document> getDocuments() {
-		return documents;
-	}
-
-	public void setDocuments(List<Document> documents) {
-		this.documents = documents;
-	}
-
-	public HashMap<String, Long> getIdfs() {
-		return idfs;
-	}
-
-	public Long getIDF(String term) {
-		if (idfs.containsKey(term)) return idfs.get(term);
-		else return 0l;
-	}
-
-	public void setIdfs(HashMap<String, Long> idfs) {
-		this.idfs = idfs;
-	}
-
-	private void populateIDF() {
-		documents.forEach(document -> {
-			document.getTermsMap().forEach((k, v) -> {
-				if (idfs.containsKey(k)) idfs.put(k, idfs.get(k) + 1);
-				else idfs.put(k, 1l);
-			});
-		});
-		// idfs.forEach((s, v) -> idfs.put(s,Math.log(documents.size()/v)));
-		idfs.forEach((s, v) -> idfs.put(s, v));
-	}
-
-	private void populateTermImportance() {
-		documents.forEach(document -> {
-			document.getTfs().forEach((s, aLong) -> {
-				Long factor = idfs.get(s);
-				document.getTermImportance().put(s, Double.valueOf(factor));// aLong*factor);
-			});
-		});
-
-		// add idfs zero para termos nao existentes no doc
-		idfs.forEach((s, aLong) -> documents.forEach(document -> {
-			if (!document.getTermImportance().containsKey(s)) document.getTermImportance().put(s, 0d);
-		}));
-	}
-
+        System.out.println("Correct predictions:  " + results[0]);
+        if ((results[2] + results[3]) != 0)
+            System.out.println("Reccal: " + results[2]/(results[2] + results[3]));
+        else
+            System.out.println("Reccal: " + 0);
+        if ((results[0]) != 0)
+            System.out.println("Precision: " + results[2]/results[0]);
+        else
+            System.out.println("Precision: " + 0);
+        System.out.println("True Positive Rate: " + results[2]);
+        System.out.println("True Negative Rate: " + (results[1] - results[3]));
+        System.out.println("Accuracy: " + (results[0]/(results[0]+results[1]))*100 + "%");
+    //    System.out.println("F-Measure: ");
+    }
 }
