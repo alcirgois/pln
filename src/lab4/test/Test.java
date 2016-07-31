@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import lab4.engine.classification.MachineLearningHandler;
 import lab4.engine.classification.MaxentTrainer;
-import lab4.engine.classification.TermDocumentHelper;
 import lab4.model.Document;
 import lab4.util.FileManager;
 import opennlp.model.AbstractModel;
@@ -20,56 +20,57 @@ import opennlp.model.OnePassDataIndexer;
  */
 public class Test {
 
+	private MachineLearningHandler machineLearningHandler;
 	private List<Document> documents;
 
-	public Test() {
+	public Test() throws IOException {
 		documents = new ArrayList<Document>();
+		readReviews();
+		gerarTraningSet();
 	}
 
-	public void readReviews() {
+	private void readReviews() throws IOException {
 		System.out.println("******Lendo reviews******");
 		FileManager fileManager = new FileManager();
-		try {
-			documents.add(new Document("positivas",
-					fileManager.readFileToString("res/lab4/corpus_positives_reviews.txt"), "positive"));
-			documents.add(new Document("negativas",
-					fileManager.readFileToString("res/lab4/corpus_negatives_reviews.txt"), "negative"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		documents.add(new Document("positivas", fileManager.readFileToString("res/lab4/corpus_positives_reviews.txt"),
+				"positive"));
+		documents.add(new Document("negativas", fileManager.readFileToString("res/lab4/corpus_negatives_reviews.txt"),
+				"negative"));
+
 	}
 
-	public String[] generateIDF() {
-		System.out.println("******Preparando Matriz de Importancia TermoXDocumento******");
-		TermDocumentHelper termDocumentHelper = new TermDocumentHelper(documents);
-		termDocumentHelper.init();
-		return termDocumentHelper.getTermsByIDF();
+	private void gerarTraningSet() throws IOException {
+		System.out.println("******Gerando conjunto de treinamento******");
+		machineLearningHandler = new MachineLearningHandler(documents);
+		machineLearningHandler.init();
+		machineLearningHandler.generateTrainingModel("res/lab4/test/conjTreinamento.txt");
 	}
 
-	public void trainMaxentModel() {
+	public void trainMaxentModel() throws IOException {
 		System.out.println("******Treinando o Modelo Maxent******");
-		try {
-			DataIndexer dataIndexer = new OnePassDataIndexer(
-					new FileEventStream("res/lab4/corpus_positives_reviews.txt"), 2);
-			MaxentModel maxentModel = MaxentTrainer.trainModel(dataIndexer, 10000);
-			MaxentTrainer.saveModel("test", (AbstractModel) maxentModel);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		DataIndexer dataIndexer = new OnePassDataIndexer(new FileEventStream("res/lab4/test/conjTreinamento.txt"), 2);
+		MaxentModel maxentModel = MaxentTrainer.trainModel(dataIndexer, 10000);
+		MaxentTrainer.saveModel("res/lab4/test/test", (AbstractModel) maxentModel);
 	}
 
 	public String getPrediction(boolean onlyBest) {
 		System.out.println("******Prevendo a classe******");
-		MaxentModel maxentModel = MaxentTrainer.loadModel("test");
-		String context[] = generateIDF();
+		MaxentModel maxentModel = MaxentTrainer.loadModel("res/lab4/test/test");
+		String context[] = { "generateIDF();" };
 		double outcomeProbs[] = maxentModel.eval(context);
 		if (onlyBest) return maxentModel.getBestOutcome(outcomeProbs);
 		else return maxentModel.getAllOutcomes(outcomeProbs);
 	}
 
 	public static void main(String[] args) {
-		Test test = new Test();
-		test.trainMaxentModel();
-		System.out.println(test.getPrediction(false));
+		System.out.println("------Tarefa 01------");
+		Test test;
+		try {
+			test = new Test();
+			test.trainMaxentModel();
+			System.out.println(test.getPrediction(false));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
