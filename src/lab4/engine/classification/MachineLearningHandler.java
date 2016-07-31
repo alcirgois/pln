@@ -1,88 +1,110 @@
 package lab4.engine.classification;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
+import com.google.common.base.Strings;
+import lab4.util.FileManager;
+import lab4.model.Document;
 
-import net.sf.javaml.classification.Classifier;
-import net.sf.javaml.classification.KNearestNeighbors;
-import net.sf.javaml.classification.bayes.NaiveBayesClassifier;
-import net.sf.javaml.classification.evaluation.CrossValidation;
-import net.sf.javaml.classification.evaluation.PerformanceMeasure;
-import net.sf.javaml.core.Dataset;
-import net.sf.javaml.core.Instance;
-import net.sf.javaml.tools.data.FileHandler;
+import java.io.IOException;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
- * Created by ericm on 23-Jul-16.
+ * Created by Ariel on 31-Jul-16.
  */
+
 public class MachineLearningHandler {
 
-    public void knn(String fileName, int classPosition, int k, boolean metricas) throws IOException {
-        System.out.println("------" + k + "NN------");
+    private List<Document> documents;
+    private HashMap<String,Long> idfs;
 
-        Dataset data = FileHandler.loadDataset(new File(fileName), classPosition,";");
-        System.out.println("------Treinando------");
-        Classifier knn = new KNearestNeighbors(k);
-        knn.buildClassifier(data);
-        System.out.println("OK");
-
-        classify(data, knn, metricas);
+    public MachineLearningHandler(List<Document> documents) {
+        this.documents = documents;
+        idfs = new HashMap<>();
     }
 
-    public void naiveBayes(String file, int classPosition,
-                           boolean metricas) throws IOException {
-        System.out.println("------Naive Bayes------");
-        Dataset data = FileHandler.loadDataset(new File(file), classPosition,";");
-
-		/* Discretize through EqualWidtBinning */
-       /* EqualWidthBinning eb = new EqualWidthBinning(10);
-        System.out.println("Start discretisation");
-        eb.build(data);
-        Dataset ddata = data.copy();
-        eb.filter(ddata); */
-
-        System.out.println("------Treinando------");
-        boolean useLaplace = true;
-        boolean useLogs = true;
-        Classifier nbc = new NaiveBayesClassifier(useLaplace, useLogs, false);
-        nbc.buildClassifier(data);
-        System.out.println("OK");
-
-        classify(data, nbc, metricas);
+    public void init(){
+        populateTermFrequency();
+        populateIDF();
+        populateTermImportance();
     }
 
-    private void classify(Dataset dataForClassification, Classifier classificador, boolean metricas) throws IOException {
-        System.out.println("------Classificando------");
+    public void generateTrainingModel () throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        Map<String, Long> terms =
+                idfs.entrySet().stream()
+                        .sorted(Map.Entry.comparingByKey(Comparator.reverseOrder()))
+                        .limit(1000)
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-        int correct = 0, wrong = 0;
-        for (Instance inst : dataForClassification) {
-            Object predictedClassValue = classificador.classify(inst);
-            Object realClassValue = inst.classValue();
-            if (predictedClassValue.equals(realClassValue))
-                correct++;
-            else {
-                System.out.println("Erro ao classificar instancia: "+(correct+wrong));
-                wrong++;
+        documents.forEach(document -> {
+            stringBuilder.append("class="+document.getName()).append(" ");
+            for (Map.Entry<String, Long> term : terms.entrySet()) {
+                long aLong = Math.round(document.getTermImportance().get(term.getKey()));
+                stringBuilder.append(term.getKey()+"="+aLong).append(" ");
             }
-        }
-        System.out.println("Correct predictions  " + correct);
-        System.out.println("Wrong predictions " + wrong);
+            stringBuilder.append(System.getProperty("line.separator"));
+        });
 
-        if (metricas) {
-            System.out.println("******Rodando 6-fold******");
-            CrossValidation cv = new CrossValidation(classificador);
-            Map<Object, PerformanceMeasure> pm = cv.crossValidation(dataForClassification,6);
-            for (Object o : pm.keySet()) {
-                System.out.println("------" + o + "------");
-                System.out.println("Accuracy : " + pm.get(o).getAccuracy());
-                System.out.println("Reccal : " + pm.get(o).getRecall());
-                System.out.println("Precision : " + pm.get(o).getPrecision());
-                System.out.println("True Positive Rate :"+pm.get(o).getTPRate());
-                System.out.println("True Negative Rate :"+pm.get(o).getTNRate());
-                System.out.println("F-Measure :"+pm.get(o).getFMeasure());
-            }
-        }
+        (new FileManager()).writeToFile("MaxEntTrainFiles.txt", stringBuilder.toString());
+    }
+
+    private void populateTermFrequency() {
+        documents.forEach(document-> document.init(false));
+    }
+
+    public List<Document> getDocuments() {
+        return documents;
+    }
+
+    public void setDocuments(List<Document> documents) {
+        this.documents = documents;
+    }
+
+    public HashMap<String, Long> getIdfs() {
+        return idfs;
+    }
+    
+    public Long getIDF (String term) {
+        if (idfs.containsKey(term))
+            return idfs.get(term);
+        else
+            return 0l;
+    }
+
+    public void setIdfs(HashMap<String, Long> idfs) {
+        this.idfs = idfs;
+    }
+
+    private void populateIDF(){
+        documents.forEach(document -> {
+            document.getTermsMap().forEach((k, v) -> {
+                if(idfs.containsKey(k))
+                    idfs.put(k, idfs.get(k)+1);
+                else
+                    idfs.put(k,1l);
+            });
+        });
+        //idfs.forEach((s, v) -> idfs.put(s,Math.log(documents.size()/v)));
+        idfs.forEach((s, v) -> idfs.put(s,v));
+    }
+
+    private void populateTermImportance(){
+        documents.forEach(document -> {
+            document.getTfs().forEach((s, aLong) -> {
+                Long factor = idfs.get(s);
+                document.getTermImportance().put(s, Double.valueOf(factor));//aLong*factor);
+            });
+        });
+
+        //add idfs zero para termos nao existentes no doc
+        idfs.forEach((s, aLong) ->
+                documents.forEach(document -> {
+                    if(!document.getTermImportance().containsKey(s))
+                        document.getTermImportance().put(s,0d);
+                }));
     }
 
 }

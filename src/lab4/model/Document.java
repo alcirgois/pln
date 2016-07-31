@@ -1,8 +1,8 @@
 package lab4.model;
 
-import java.util.*;
-
 import lab4.engine.Tokenizer;
+
+import java.util.*;
 
 /**
  * Created by ericm on 23-Jul-16.

@@ -4,5 +4,20 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/User Library"/>
 	<classpathentry kind="lib" path="res"/>
+	<classpathentry kind="lib" path="libs/opennlp-maxent-3.0.3.jar"/>
+	<classpathentry kind="lib" path="libs/opennlp-tools-1.5.3.jar"/>
+	<classpathentry kind="lib" path="libs/PTStemmer_v2.jar"/>
+	<classpathentry kind="lib" path="libs/cogroo-addon-pt_br-4.0.0.jar"/>
+	<classpathentry kind="lib" path="libs/cogroo-ann-4.0.0.jar"/>
+	<classpathentry kind="lib" path="libs/cogroo-ann-pt_br-4.0.0.jar"/>
+	<classpathentry kind="lib" path="libs/cogroo-dict-4.0.0-dict.zip"/>
+	<classpathentry kind="lib" path="libs/cogroo-gc-4.0.0.jar"/>
+	<classpathentry kind="lib" path="libs/cogroo-gc-pt_br-4.0.0.jar"/>
+	<classpathentry kind="lib" path="libs/cogroo-nlp-4.0.0.jar"/>
+	<classpathentry kind="lib" path="libs/cogroo-res-pt_br-4.0.0.jar"/>
+	<classpathentry kind="lib" path="libs/jsoup-1.9.2.jar"/>
+	<classpathentry kind="lib" path="libs/javaml-0.1.7.jar"/>
+	<classpathentry kind="lib" path="libs/ajt-2.9.jar"/>
+
 	<classpathentry kind="output" path="bin"/>
 </classpath>
