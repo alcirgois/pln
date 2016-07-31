@@ -29,15 +29,28 @@ public class Tokenizer {
     }
 
     public void getHashMap(String text, HashMap<String,Long> hashMap) {
-        text = text.replace("(","")
-                .replace(")","")
-                .replace("!","")
-                .replace(".","")
-                .replace(",","")
-                .replace("?","")
-                .replace(":","")
-                .replace(";","")
-                .replace("\"","");
+        text = text.toLowerCase().replaceAll("\\("," ")
+                .replaceAll("\\)"," ")
+                .replaceAll("\\d+", " ")
+                .replaceAll("!"," ")
+                .replaceAll("\\."," ")
+                .replaceAll(","," ")
+                .replaceAll("\\?"," ")
+                .replaceAll(":"," ")
+                .replaceAll(";"," ")
+                .replaceAll("\""," ")
+                .replaceAll("=", " ")
+                .replaceAll("\\+", " ")
+                .replaceAll("\\s-", " ")
+                .replaceAll("-\\s", " ")
+                .replaceAll("\\S*[\\\\/]\\S*", " ")
+                .replaceAll("\\s'"," ")
+                .replaceAll("'\\s"," ")
+                .replaceAll("\\s[^A-Za-z·‡‚„ÈÍÌÛÙı˙Á¡¿¬√…Õ”‘’⁄«]+", " ")
+                .replaceAll("[^A-Za-z·‡‚„ÈÍÌÛÙı˙Á¡¿¬√…Õ”‘’⁄«]+\\s", " ")
+                .replaceAll("\\s\\S{0,2}\\s", " ")
+                .replaceAll("\\S{23,}", " ")
+                ;
 
         String[] words = text.split("\\s+");
         for(String word: words){
