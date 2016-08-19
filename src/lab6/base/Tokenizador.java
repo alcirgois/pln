@@ -12,42 +12,41 @@ import opennlp.tools.util.Span;
 
 /**
  * Usando OpenNLP para NER (NLP with Java, p. 107)
+ * 
  * @author Emanuel
  *
  */
 public class Tokenizador {
 	private Tokenizer tokenizador;
 	private NameFinderME buscadorDeNomes;
-	private String[] tokens;
-	
+
 	public Tokenizador() {
 		TokenizerModel modeloTokenizador;
 		TokenNameFinderModel modeloEntidade;
 		try {
-			modeloTokenizador = new TokenizerModel(GestorDeArq.lerArquivo("modelo_de_tokens.txt"));
+			modeloTokenizador = new TokenizerModel(
+				GestorDeArq.lerArquivo(GestorDeArq.DIR_DOS_MODELOS_EN + "en-token.bin")
+			);
 			tokenizador = new TokenizerME(modeloTokenizador);
-			modeloEntidade = new TokenNameFinderModel(GestorDeArq.lerArquivo("modelo_de_entidades.txt"));
+
+			modeloEntidade = new TokenNameFinderModel(
+				GestorDeArq.lerArquivo(GestorDeArq.DIR_DOS_MODELOS_EN + "en-ner-person.bin")
+			);
 			buscadorDeNomes = new NameFinderME(modeloEntidade);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public String[] getTokens(String sentenca) {
-		tokens = tokenizador.tokenize(sentenca);
-		return tokens;
+		return tokenizador.tokenize(sentenca);
 	}
-		
-	public String[] getTokens() {
-		return tokens;
-	}
-	
+
 	public Span[] getNameSpans(String sentenca) {
-		tokens = tokenizador.tokenize(sentenca);
-		return buscadorDeNomes.find(tokens);
+		return buscadorDeNomes.find(getTokens(sentenca));
 	}
-	
-	public Span[] getNameSpans() {
-		return buscadorDeNomes.find(tokens);
+
+	public double[] getProbs(String sentenca) {
+		return buscadorDeNomes.probs(getNameSpans(sentenca));
 	}
 }

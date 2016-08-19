@@ -10,6 +10,12 @@ import java.io.InputStream;
  *
  */
 public class GestorDeArq {
+
+	public static final String DIR_DOS_MODELOS_PT = "res/lab6/models/pt/";
+	public static final String DIR_DOS_MODELOS_EN = "res/lab6/models/en/";
+	
+	public static final String DIR_DOS_CORPORA = "res/lab6/corpora/";
+	
 	public static InputStream lerArquivo(String nomeDoArquivo) {
 		try {
 			return new FileInputStream(new File(nomeDoArquivo));
